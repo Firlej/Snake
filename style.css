@@ -1,0 +1,12 @@
+/* html,
+body {
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
+} */
+
+#gameArea {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+}
