@@ -2,6 +2,12 @@ const INITIAL_SNAKE_LENGTH = 3;
 
 class Snake {
     constructor() {
+        this.reset();
+        this.pause();
+        this.highscore = localStorage.getItem('highscore') === null ? this.score() : Number(localStorage.getItem('highscore'));
+    }
+
+    reset() {
         this.t = [];
 
         this.dir = vec(1, 0);
@@ -16,19 +22,29 @@ class Snake {
 
         for (let i = 1; i < INITIAL_SNAKE_LENGTH; i++) {
             this.t.push(vec(this.t[0].x - i, this.t[0].y));
-            console.log(this.t[i].x * tileSize, this.t[i].y * tileSize, tileSize, tileSize);
+            // console.log(this.t[i].x * tileSize, this.t[i].y * tileSize, tileSize, tileSize);
         }
-        console.log(this.t);
+        // console.log(this.t);
+
+        $("#score").html(this.score());
     }
 
     draw() {
         fill("lime");
-        for (let i = 0; i < this.t.length; i++) {
+        for (let i = 1; i < this.t.length; i++) {
             rect(this.t[i].x * tileSize, this.t[i].y * tileSize, tileSize, tileSize);
         }
         // draw snakes head in a different color
         fill("red");
-        rect(this.t[0].x * tileSize, this.t[0].y * tileSize, tileSize, tileSize);
+        rect();
+
+        // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+        const x = 64
+        push();
+            translate( this.t[0].x * tileSize + tileSize/2, this.t[0].y * tileSize + tileSize/2);
+            rotate(-Math.atan2(this.dir.x, this.dir.y));
+            ctx.drawImage(images.sprite, x*4, x*1, x, x, -tileSize/2, -tileSize/2, tileSize, tileSize);
+        pop();
     }
 
     setDir(v) {
@@ -41,8 +57,8 @@ class Snake {
     }
 
     update() {
-        // dont update if snake dead
-        if (this.dead) {
+        // dont update if snake dead or puased
+        if (this.dead || this.paused) {
             return;
         }
         // update snake positions interating from the back
@@ -82,6 +98,7 @@ class Snake {
         for (let i = 1; i < this.t.length; i++) {
             if (this.t[0].equals(this.t[i])) {
                 this.dead = true;
+                this.reset();
                 break;
             }    
         }
@@ -90,5 +107,28 @@ class Snake {
     grow() {
         // add a copy of the last element to this.t array
         this.t.push(this.t.last().copy());
+
+        if (this.score() > this.highscore) {
+            this.highscore = this.score();
+            localStorage.setItem("highscore", this.highscore);
+        }
+
+        $("#score").html(this.score());
+    }
+    
+    score() {
+        return this.t.length - INITIAL_SNAKE_LENGTH;
+    }
+
+    pause() {
+        this.paused = true;
+    }
+
+    unpause() {
+        this.paused = false;
+    }
+
+    pauseUnpause() {
+        this.paused = !this.paused;
     }
 }

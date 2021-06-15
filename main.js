@@ -2,7 +2,19 @@ let snake;
 
 let food;
 
+let frameCount = 0;
+let frameRate = 0;
+
+sources = {
+	sprite: 'https://rembound.com/files/creating-a-snake-game-tutorial-with-html5/snake-graphics.png'
+}
+
+function imagesLoaded() {
+	$("#startScreen").fadeIn('slow');
+}
+
 function setup(callback) {
+	loadImages(sources);
 
     snake = new Snake();
 
@@ -12,6 +24,14 @@ function setup(callback) {
     );
 
     callback();
+
+    // DEBUG
+    
+    setInterval(function(){
+		// console.log(frameCount);
+        frameRate = frameCount;
+        frameCount = 0;
+	}, 1000);
 }
 
 function draw() {
@@ -27,9 +47,24 @@ function draw() {
 
     snake.draw();
 
+    // draw food
     fill(rgb(250, 100, 100));
     foodSize = tileSize * 0.6;
     rect(food.x * tileSize + (tileSize - foodSize) / 2, food.y * tileSize + (tileSize - foodSize) / 2, foodSize, foodSize);
+
+    // draw highscore
+    font(floor(height * 0.1) + "px Arial");
+    fill("red");
+    textAlign("center");
+    text(snake.highscore, width/2, 0.1 * height);
+
+    // DEBUG
+    frameCount++;
+    font(floor(height * 0.1) + "px Arial");
+    fill("red");
+    textAlign("end");
+    text(frameRate, width * 0.99, 0.1 * height);
+
 }
 
 function keyDown(key) {
@@ -47,6 +82,9 @@ function keyDown(key) {
             break;
         case "ArrowRight":
             snake.setDir(vec(1, 0));
+            break;
+        case " ":
+            snake.pauseUnpause();
             break;
         default:
             break;
@@ -72,13 +110,12 @@ function windowResized() {
 
     gameArea.style.height = newHeight + 'px';
     gameArea.style.width = newWidth + 'px';
-
     gameArea.style.marginTop = (-newHeight / 2) + 'px';
     gameArea.style.marginLeft = (-newWidth / 2) + 'px';
 
     resizeCanvas($('#gameArea').width(), $('#gameArea').height());
-
     resizeCanvas($('#gameArea').width(), $('#gameArea').height());
 
     setVariables();
+    ctx.imageSmoothingEnabled = false;
 }

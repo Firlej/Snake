@@ -30,7 +30,6 @@ window.onload = () => {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // ctx.stroke();
 
     addEventListeners();
 
@@ -41,7 +40,7 @@ window.onload = () => {
         draw();
         setInterval(() => {
             draw();
-        }, 1000 / 5);
+        }, 1000 / 10);
     });
 }
 
@@ -53,6 +52,32 @@ function setLibValues() {
     windowHeight = window.innerHeight;
 }
 
+// IMAGES
+
+let images = [];
+
+function imagesLoaded() {}
+
+function loadImages(sources) {
+    let numImages = 0;
+    for (src in sources) {
+        numImages++;
+    }
+    let loadedImages = 0;
+    for (src in sources) {
+        images[src] = new Image();
+        images[src].onload = function () {
+            loadedImages++;
+            if (loadedImages == numImages) {
+                //console.log("Images loaded!");
+                imagesLoaded();
+            }
+        };
+        images[src].src = sources[src];
+    }
+}
+
+// RESIZE CAVAS
 
 function resizeCanvas(width, height) {
     ctx.canvas.width = width;
@@ -189,4 +214,36 @@ class Vector {
 
 function vec(x, y) {
     return new Vector(x, y);
+}
+
+// TEXT
+
+function font(f) {
+    ctx.font = f;
+}
+
+function textAlign(a) {
+    // start / end / left / center / right
+    ctx.textAlign = a;
+}
+
+function text(text, x, y) {
+    ctx.fillText(text, x, y);
+}
+
+// context manipulation
+
+function push() {
+    ctx.save()
+};
+
+function translate(x, y) {
+    ctx.translate(x, y);
+}
+function rotate(x) {
+    ctx.rotate(x);
+}
+
+function pop() {
+    ctx.restore();
 }
