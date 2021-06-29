@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Snake</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+    <div id="gameArea">
+        <div id="gameScreen" class="screen">
+            <canvas id="canvas" width="320" height="200"></canvas>
+            <div id="highscore">0</div>
+        </div>
+
+        <div id="startScreen" class="screen">
+			<div id="play">PLAY</div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="lib.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+
+    <script>
+		$('#play').click(() => {
+			$("#startScreen").fadeOut('fast', () => {
+                $("#gameScreen").fadeIn('fast');
+            });
+		});
+
+        // $("#startScreen").fadeIn('fast');
+    </script>
+</body>
+
+</html>
